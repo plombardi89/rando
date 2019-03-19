@@ -1,6 +1,7 @@
 package rando
 
 import (
+	"errors"
 	"math/rand"
 	"time"
 )
@@ -47,4 +48,29 @@ func (r *Random) RandomSelectionFromStringSlice(values []string) string {
 // RandomBool returns a random boolean value.
 func (r *Random) RandomBool() bool {
 	return rand.Intn(2) == 0
+}
+
+func (r *Random) SampleStringSlice(values []string, size int) ([]string, error) {
+	if size < 0 || size > len(values) {
+		return nil, errors.New("size is negative or greater than the the length of input values")
+	}
+
+	if size == 0 {
+		return []string{}, nil
+	}
+
+	sampled := make(map[string]struct{})
+	for i := size; i >= 0; i-- {
+		candidate := r.RandomSelectionFromStringSlice(values)
+		if _, found := sampled[candidate]; !found {
+			sampled[candidate] = struct{}{}
+		}
+	}
+
+	res := make([]string, 0)
+	for k := range sampled {
+		res = append(res, k)
+	}
+
+	return res, nil
 }
