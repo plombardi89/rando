@@ -1,6 +1,6 @@
 SHELL := /usr/bin/env bash
 
-all: fmt
+all: fmt test
 
 fmt:
 	go fmt ./...
